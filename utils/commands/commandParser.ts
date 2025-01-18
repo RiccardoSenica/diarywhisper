@@ -131,11 +131,10 @@ export const expenseCommands: CommandDefinition[] = [
     flags: []
   },
   {
-    // TODO
     name: 'report',
     flags: [
-      { name: 'from', type: 'date', required: true },
-      { name: 'to', type: 'date', required: true },
+      { name: 'dateFrom', type: 'date', required: true },
+      { name: 'dateTo', type: 'date', required: true },
       { name: 'export', type: 'boolean', required: false }
     ]
   }

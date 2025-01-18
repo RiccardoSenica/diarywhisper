@@ -3,11 +3,12 @@ import { z } from 'zod';
 import { ShortcutsResponse } from '../types';
 import { CommandParser, expenseCommands } from './commandParser';
 import { Category, Expense } from '@prisma/client';
+import { ExpenseReporter } from './report';
 
 const ExpenseSchema = z.object({
   description: z.string().min(1),
   cost: z.number().positive(),
-  categoryName: z.string() // Category is required in your schema
+  categoryName: z.string()
 });
 
 type ExpenseType = z.infer<typeof ExpenseSchema>;
@@ -22,7 +23,6 @@ const createOrGetCategory = async (name: string) => {
 };
 
 const createExpense = async (data: ExpenseType) => {
-  // Category is required, so we always create/get it
   const category = await createOrGetCategory(data.categoryName);
 
   const newExpense = await prisma.expense.create({
@@ -30,7 +30,7 @@ const createExpense = async (data: ExpenseType) => {
       description: data.description,
       cost: data.cost,
       categoryId: category.id,
-      deleted: false // Explicit set as per your schema
+      deleted: false
     },
     include: {
       category: true
@@ -51,7 +51,7 @@ const updateExpense = async (id: string, data: Partial<ExpenseType>) => {
   const updatedExpense = await prisma.expense.update({
     where: {
       id,
-      deleted: false // Only update non-deleted expenses
+      deleted: false
     },
     data: {
       ...(data.description && { description: data.description }),
@@ -67,11 +67,10 @@ const updateExpense = async (id: string, data: Partial<ExpenseType>) => {
 };
 
 const deleteExpense = async (id: string) => {
-  // Soft delete as per your schema
   await prisma.expense.update({
     where: {
       id,
-      deleted: false // Prevent re-deleting
+      deleted: false
     },
     data: {
       deleted: true
@@ -168,6 +167,33 @@ export async function expenseCommand(
         };
       }
 
+      case 'report': {
+        try {
+          const reporter = new ExpenseReporter();
+          const from = parsedCommand.flags.dateFrom as Date;
+          const to = parsedCommand.flags.dateTo as Date;
+          const includeJson = parsedCommand.flags.export as boolean || false;
+
+          await reporter.sendReport(from, to, includeJson);
+
+          const formatDate = (date: Date) => date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+
+          return {
+            success: true,
+            message: `Report sent for period: ${formatDate(from)} to ${formatDate(to)}`
+          };
+        } catch (error) {
+          return {
+            success: false,
+            message: error instanceof Error ? error.message : 'Failed to generate report'
+          };
+        }
+      }
+
       default:
         return {
           success: false,
@@ -177,7 +203,6 @@ export async function expenseCommand(
   } catch (error) {
     console.error('Error processing expense command:', error);
 
-    // Handle specific Prisma errors
     if (error instanceof Error) {
       if (error.message.includes('Record to update not found')) {
         return {
