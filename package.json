@@ -1,7 +1,7 @@
 {
-  "name": "hackernews-newsletter",
-  "version": "1.0.0",
-  "description": "Newsletter with the top stories from the Hacker News forum",
+  "name": "walletwhisper",
+  "version": "0.1.0",
+  "description": "Siri-enabled budget tracker",
   "author": "riccardo@frompixels.com",
   "scripts": {
     "dev": "next dev",
