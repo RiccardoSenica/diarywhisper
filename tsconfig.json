@@ -19,8 +19,7 @@
       }
     ],
     "paths": {
-      "@app/*": ["./app/*"],
-      "@prisma/*": ["./prisma/*"],
+      "@api/*": ["./app/api/*"],
       "@utils/*": ["./utils/*"]
     }
   },

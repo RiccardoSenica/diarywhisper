@@ -16,6 +16,7 @@ Example: "add 25 groceries" will record a $25 expense in the groceries category.
 ## 🏁 Getting Started
 
 ### 📋 Prerequisites
+
 - 📦 Node.js
 - 🐳 Docker
 - 🔧 Vercel CLI
@@ -24,17 +25,20 @@ Example: "add 25 groceries" will record a $25 expense in the groceries category.
 ### 💻 Installation
 
 1. Clone the repository:
+
 ```bash
 git clone [repository-url]
 cd walletwhisper
 ```
 
 2. Install dependencies:
+
 ```bash
 yarn install
 ```
 
 3. Set up Vercel:
+
 ```bash
 # Install Vercel CLI
 yarn add -g vercel@latest
@@ -47,6 +51,7 @@ yarn vercel:env
 ```
 
 4. Set up the database:
+
 ```bash
 # Push Prisma schema to database
 yarn db:push
@@ -58,6 +63,7 @@ yarn prisma:generate
 ### 🗄️ Database Management
 
 Reset database (⚠️ caution: this will delete all data):
+
 ```bash
 yarn db:reset
 ```
