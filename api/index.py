@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
+from pydantic_settings import BaseSettings
+from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 import re
 
