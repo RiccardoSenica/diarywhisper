@@ -20,6 +20,7 @@
     ],
     "paths": {
       "@api/*": ["./app/api/*"],
+      "@prisma/*": ["./prisma/*"],
       "@utils/*": ["./utils/*"]
     }
   },
