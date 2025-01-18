@@ -10,8 +10,7 @@ export class ShortcutsHandler {
 
   validateRequest(req: ShortcutsRequest): boolean {
     try {
-      const isValidUser = req.apiKey == process.env.USER_KEY;
-
+      const isValidUser = req.apiKey === process.env.USER_KEY;
       return !!isValidUser;
     } catch (error) {
       console.error('Error validating request:', error);
@@ -23,12 +22,25 @@ export class ShortcutsHandler {
     command: string,
     parameters?: Record<string, string>
   ): Promise<ShortcutsResponse> {
-    const handler = this.registry.getCommand(command);
+    // Special handling for expense commands
+    if (command === 'expense') {
+      const handler = this.registry.getCommand(command);
+      if (!handler) {
+        return {
+          success: false,
+          message: `Unknown command: ${command}`
+        };
+      }
 
+      return handler(parameters);
+    }
+
+    // Handle non-expense commands (like ping)
+    const handler = this.registry.getCommand(command);
     if (!handler) {
       return {
         success: false,
-        message: `Unknown command: ${command}.`
+        message: `Unknown command: ${command}`
       };
     }
 
@@ -38,7 +50,7 @@ export class ShortcutsHandler {
       console.error(`Error processing command ${command}:`, error);
       return {
         success: false,
-        message: 'An error occurred while processing your command.'
+        message: error instanceof Error ? error.message : 'An error occurred while processing your command'
       };
     }
   }
