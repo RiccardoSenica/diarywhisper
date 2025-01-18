@@ -50,7 +50,10 @@ export class ShortcutsHandler {
       console.error(`Error processing command ${command}:`, error);
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'An error occurred while processing your command'
+        message:
+          error instanceof Error
+            ? error.message
+            : 'An error occurred while processing your command'
       };
     }
   }

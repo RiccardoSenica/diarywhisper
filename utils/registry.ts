@@ -1,7 +1,7 @@
 import { ShortcutsResponse } from './types';
 import { pingCommand } from './commands/ping';
 import { expenseCommand } from './commands/expense';
-import { CommandParser, expenseCommands } from './commandParser';
+import { CommandParser, expenseCommands } from './commands/commandParser';
 
 type CommandHandler = (
   parameters?: Record<string, string>
@@ -20,7 +20,7 @@ export class CommandRegistry {
   private registerDefaultCommands() {
     this.commands.set('ping', pingCommand);
     this.commands.set('expense', expenseCommand);
-    
+
     expenseCommands.forEach(cmd => {
       this.parser.registerCommand(cmd);
     });

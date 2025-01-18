@@ -1,15 +1,4 @@
-interface Flag  {
-  name: string;
-  type: 'string' | 'number' | 'boolean' | 'date';
-  required: boolean;
-  alias?: string;
-};
-
-interface CommandDefinition {
-  name: string;
-  flags: Flag[];
-  hasId?: boolean;  // For commands like update/delete that need an ID
-};
+import { CommandDefinition } from '@utils/types';
 
 export class CommandParser {
   private commands: Map<string, CommandDefinition>;
@@ -22,7 +11,7 @@ export class CommandParser {
     this.commands.set(definition.name.toLowerCase(), definition);
   }
 
-  parse(input: string): { 
+  parse(input: string): {
     command: string;
     id?: string;
     flags: Record<string, string | number | boolean | Date>;
@@ -31,7 +20,7 @@ export class CommandParser {
     if (!parts || parts.length === 0) {
       throw new Error('Invalid command format');
     }
-    
+
     const command = parts[0].toLowerCase();
     const definition = this.commands.get(command);
 
@@ -42,7 +31,6 @@ export class CommandParser {
     let currentIndex = 1;
     const flags: Record<string, string | number | boolean | Date> = {};
 
-    // Handle ID for update/delete commands
     if (definition.hasId) {
       if (parts.length < 2) {
         throw new Error(`Command ${command} requires an ID`);
@@ -59,8 +47,8 @@ export class CommandParser {
       }
 
       const flagName = flag.slice(2);
-      const flagDef = definition.flags.find(f => 
-        f.name === flagName || f.alias === flagName
+      const flagDef = definition.flags.find(
+        f => f.name === flagName || f.alias === flagName
       );
 
       if (!flagDef) {
@@ -72,9 +60,8 @@ export class CommandParser {
         throw new Error(`Missing value for flag: ${flagName}`);
       }
 
-      const value = parts[currentIndex].replace(/^"(.*)"$/, '$1'); // Remove quotes if present
+      const value = parts[currentIndex].replace(/^"(.*)"$/, '$1');
 
-      // Parse value according to flag type
       switch (flagDef.type) {
         case 'number': {
           const num = Number(value);
@@ -104,7 +91,6 @@ export class CommandParser {
       currentIndex++;
     }
 
-    // Check for required flags
     for (const flagDef of definition.flags) {
       if (flagDef.required && !(flagDef.name in flags)) {
         throw new Error(`Missing required flag: ${flagDef.name}`);
@@ -113,7 +99,7 @@ export class CommandParser {
 
     return {
       command,
-      ...flags.id ? { id: flags.id as string } : {},
+      ...(flags.id ? { id: flags.id as string } : {}),
       flags: Object.fromEntries(
         Object.entries(flags).filter(([key]) => key !== 'id')
       )
@@ -121,7 +107,6 @@ export class CommandParser {
   }
 }
 
-// Example command definitions
 export const expenseCommands: CommandDefinition[] = [
   {
     name: 'add',
@@ -146,6 +131,7 @@ export const expenseCommands: CommandDefinition[] = [
     flags: []
   },
   {
+    // TODO
     name: 'report',
     flags: [
       { name: 'from', type: 'date', required: true },

@@ -1,13 +1,13 @@
 import prisma from '@prisma/prisma';
 import { z } from 'zod';
 import { ShortcutsResponse } from '../types';
-import { CommandParser, expenseCommands } from './../commandParser';
+import { CommandParser, expenseCommands } from './commandParser';
 import { Category, Expense } from '@prisma/client';
 
 const ExpenseSchema = z.object({
   description: z.string().min(1),
   cost: z.number().positive(),
-  categoryName: z.string()  // Category is required in your schema
+  categoryName: z.string() // Category is required in your schema
 });
 
 type ExpenseType = z.infer<typeof ExpenseSchema>;
@@ -30,7 +30,7 @@ const createExpense = async (data: ExpenseType) => {
       description: data.description,
       cost: data.cost,
       categoryId: category.id,
-      deleted: false  // Explicit set as per your schema
+      deleted: false // Explicit set as per your schema
     },
     include: {
       category: true
@@ -42,16 +42,16 @@ const createExpense = async (data: ExpenseType) => {
 
 const updateExpense = async (id: string, data: Partial<ExpenseType>) => {
   let categoryId = undefined;
-  
+
   if (data.categoryName) {
     const category = await createOrGetCategory(data.categoryName);
     categoryId = category.id;
   }
 
   const updatedExpense = await prisma.expense.update({
-    where: { 
+    where: {
       id,
-      deleted: false  // Only update non-deleted expenses
+      deleted: false // Only update non-deleted expenses
     },
     data: {
       ...(data.description && { description: data.description }),
@@ -69,9 +69,9 @@ const updateExpense = async (id: string, data: Partial<ExpenseType>) => {
 const deleteExpense = async (id: string) => {
   // Soft delete as per your schema
   await prisma.expense.update({
-    where: { 
+    where: {
       id,
-      deleted: false  // Prevent re-deleting
+      deleted: false // Prevent re-deleting
     },
     data: {
       deleted: true
@@ -79,7 +79,7 @@ const deleteExpense = async (id: string) => {
   });
 };
 
-const formatExpenseResponse = (expense: Expense & {category: Category}) => ({
+const formatExpenseResponse = (expense: Expense & { category: Category }) => ({
   id: expense.id,
   description: expense.description,
   cost: expense.cost,
@@ -136,13 +136,16 @@ export async function expenseCommand(
         }
 
         const updateData: Partial<ExpenseType> = {};
-        if (parsedCommand.flags.desc) updateData.description = parsedCommand.flags.desc as string;
-        if (parsedCommand.flags.cost) updateData.cost = parsedCommand.flags.cost as number;
-        if (parsedCommand.flags.cat) updateData.categoryName = parsedCommand.flags.cat as string;
+        if (parsedCommand.flags.desc)
+          updateData.description = parsedCommand.flags.desc as string;
+        if (parsedCommand.flags.cost)
+          updateData.cost = parsedCommand.flags.cost as number;
+        if (parsedCommand.flags.cat)
+          updateData.categoryName = parsedCommand.flags.cat as string;
 
         const expense = await updateExpense(parsedCommand.id, updateData);
         const formatted = formatExpenseResponse(expense);
-        
+
         return {
           success: true,
           message: `Updated expense: ${formatted.description} (${formatted.cost.toFixed(2)}€) in category ${formatted.category}`,
@@ -186,7 +189,8 @@ export async function expenseCommand(
 
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'An unexpected error occurred'
+      message:
+        error instanceof Error ? error.message : 'An unexpected error occurred'
     };
   }
 }

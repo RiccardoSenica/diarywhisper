@@ -1,11 +1,17 @@
 import { z } from 'zod';
 
-export const ExpenseSchema = z.object({
-  description: z.string(),
-  cost: z.number()
-});
+export interface Flag {
+  name: string;
+  type: 'string' | 'number' | 'boolean' | 'date';
+  required: boolean;
+  alias?: string;
+}
 
-export type ExpenseType = z.infer<typeof ExpenseSchema>;
+export interface CommandDefinition {
+  name: string;
+  flags: Flag[];
+  hasId?: boolean;
+}
 
 export const RequestSchema = z.object({
   command: z.string(),
