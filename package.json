@@ -1,0 +1,56 @@
+{
+  "name": "hackernews-newsletter",
+  "version": "1.0.0",
+  "description": "Newsletter with the top stories from the Hacker News forum",
+  "author": "riccardo@frompixels.com",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --config .prettierrc '**/*.{js,jsx,ts,tsx,json,md}' --write",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky install",
+    "audit": "audit-ci",
+    "vercel:link": "vercel link",
+    "vercel:env": "vercel env pull .env",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:push": "npx prisma db push",
+    "prisma:generate": "npx prisma generate",
+    "prisma:reset": "npx prisma db push --force-reset"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.6.0",
+    "next": "^14.2.15",
+    "react": "^18",
+    "react-dom": "^18",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
+    "audit-ci": "^6.6.1",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.3",
+    "eslint-config-prettier": "^9.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.1.0",
+    "prisma": "^5.6.0",
+    "typescript": "^5.6.2"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --quiet --fix"
+    ],
+    "*.{json,ts,tsx}": [
+      "prettier --write --ignore-unknown"
+    ]
+  }
+}
