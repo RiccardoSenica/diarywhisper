@@ -60,7 +60,8 @@ export async function processDayLog(
     console.error('Error processing daylog:', error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Failed to process daylog'
+      message:
+        error instanceof Error ? error.message : 'Failed to process daylog'
     };
   }
 }

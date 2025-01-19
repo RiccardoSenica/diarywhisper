@@ -17,19 +17,19 @@ A personal expenses and day log tracking API that works with Siri Shortcuts. Usi
 #### Add an Expense
 
 ```
-add --desc "description" --cost amount --cat category
+add -desc "description" -cost amount -cat category
 ```
 
-Example: `add --desc "Weekly groceries" --cost 87.50 --cat groceries`
+Example: `add -desc "Weekly groceries" -cost 87.50 -cat groceries`
 
 #### Update an Expense
 
 ```
-update expenseId --desc "new description" --cost newAmount --cat newCategory
+update expenseId -desc "new description" -cost newAmount -cat newCategory
 ```
 
 All flags are optional - only include what you want to change.  
-Example: `update abc123 --cost 92.30 --cat groceries`
+Example: `update abc123 -cost 92.30 -cat groceries`
 
 #### Delete an Expense
 
@@ -42,8 +42,10 @@ Example: `delete abc123`
 #### Generate Report
 
 ```
-report --dateFrom "2025-01-01" --dateTo "2025-01-31" --export true
+report -from dateFrom -to dateTo -export boolean
 ```
+
+Example: `report -from "2025-01-01" -to "2025-01-31" -export true`
 
 Generates and emails an expense report for the specified period. The report includes:
 
@@ -56,8 +58,10 @@ The `export` flag is optional - when set to true, a JSON file with the raw data 
 ### Day Log
 
 ```
-daylog --text "Meeting notes or daily summary" --date "2024-01-18"
+daylog -text "text" -date "date"
 ```
+
+Example: `daylog -text "Meeting notes or daily summary" -date "2024-01-18"`
 
 Adds a log entry for a specific day. The date parameter is optional and defaults to the current date.
 
@@ -194,7 +198,7 @@ Example shortcut configuration:
 {
   "command": "expense",
   "parameters": {
-    "instruction": "add --desc \"Coffee\" --cost 3.50 --cat food"
+    "instruction": "add -desc \"Coffee\" -cost 3.50 -cat food"
   },
   "apiKey": "your_api_key_here"
 }

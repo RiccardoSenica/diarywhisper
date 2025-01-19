@@ -1,7 +1,7 @@
 import { ShortcutsResponse } from './types';
 import { pingCommand } from './commands/ping';
 import { diaryCommand } from './commands/diary';
-import { CommandParser, diaryCommands } from './commands/commandParser';
+import { CommandParser, diaryCommands } from './commands/helpers/commandParser';
 
 type CommandHandler = (
   parameters?: Record<string, string>

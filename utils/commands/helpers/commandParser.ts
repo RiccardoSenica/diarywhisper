@@ -42,11 +42,11 @@ export class CommandParser {
 
     while (currentIndex < parts.length) {
       const flag = parts[currentIndex];
-      if (!flag.startsWith('--')) {
+      if (!flag.startsWith('-')) {
         throw new Error(`Invalid flag format at: ${flag}`);
       }
 
-      const flagName = flag.slice(2);
+      const flagName = flag.slice(1);
       const flagDef = definition.flags.find(
         f => f.name === flagName || f.alias === flagName
       );
@@ -133,8 +133,8 @@ export const diaryCommands: CommandDefinition[] = [
   {
     name: 'report',
     flags: [
-      { name: 'dateFrom', type: 'date', required: true },
-      { name: 'dateTo', type: 'date', required: true },
+      { name: 'from', type: 'date', required: true },
+      { name: 'to', type: 'date', required: true },
       { name: 'export', type: 'boolean', required: false }
     ]
   },

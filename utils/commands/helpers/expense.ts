@@ -1,5 +1,5 @@
 import prisma from '@prisma/prisma';
-import { ExpenseType } from './types';
+import { ExpenseType } from '@utils/types';
 
 const createOrGetCategory = async (name: string) => {
   const category = await prisma.category.upsert({

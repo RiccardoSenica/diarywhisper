@@ -1,9 +1,13 @@
-import { ExpenseType, ShortcutsResponse } from '../types';
-import { CommandParser, diaryCommands } from './commandParser';
+import { ExpenseType, ShortcutsResponse } from '@utils/types';
+import { CommandParser, diaryCommands } from './helpers/commandParser';
 import { Category, Expense } from '@prisma/client';
 import { ExpenseReporter } from './report';
-import { createExpense, deleteExpense, updateExpense } from '@utils/expense';
-import { processDayLog } from '@utils/commands/dayLog';
+import {
+  createExpense,
+  deleteExpense,
+  updateExpense
+} from '@utils/commands/helpers/expense';
+import { processDayLog } from '@utils/commands/helpers/dayLog';
 
 const formatResponse = (expense: Expense & { category: Category }) => ({
   id: expense.id,
@@ -97,8 +101,8 @@ export async function diaryCommand(
       case 'report': {
         try {
           const reporter = new ExpenseReporter();
-          const from = parsedCommand.flags.dateFrom as Date;
-          const to = parsedCommand.flags.dateTo as Date;
+          const from = parsedCommand.flags.from as Date;
+          const to = parsedCommand.flags.to as Date;
           const includeJson = (parsedCommand.flags.export as boolean) || false;
 
           await reporter.sendReport(from, to, includeJson);
@@ -126,10 +130,10 @@ export async function diaryCommand(
       }
 
       case 'daylog': {
-          const text = parsedCommand.flags.text as string;
-          const date = (parsedCommand.flags.date as Date) || new Date();
+        const text = parsedCommand.flags.text as string;
+        const date = (parsedCommand.flags.date as Date) || new Date();
 
-          return processDayLog(text, date);
+        return processDayLog(text, date);
       }
 
       default:

@@ -3,37 +3,38 @@
 import React from 'react';
 
 export default function Home() {
-    const commands = [
-        'expense add --desc "Coffee" --cost 3.50 --cat "Food"',
-        'expense report --dateFrom "2024-01-01" --dateTo "2024-01-31"',
-        'expense daylog --text "Added team lunch" --date "2024-01-18"'
-      ];
+  const commands = [
+    'expense add -desc "Coffee" -cost 3.50 -cat "Food"',
+    'expense report -from "2024-01-01" -to "2024-01-31"',
+    'expense daylog -text "Added team lunch" -date "2024-01-18"'
+  ];
 
   return (
-<>
-      <div className="container">
-        <div className="header">
+    <>
+      <div className='container'>
+        <div className='header'>
           <h1>DiaryWhisper v1.0.0</h1>
           <p>Your expenses and day logs tracked via Siri Shortcuts</p>
         </div>
 
-        <div className="terminal">
+        <div className='terminal'>
           <div>Loading system components...</div>
           <div>Initializing expense database... OK</div>
           <div>Starting expense tracking daemon... OK</div>
           <div>System ready_</div>
         </div>
 
-        <div className="commands">
+        <div className='commands'>
           <h2>Available Commands:</h2>
           {commands.map((cmd, i) => (
-            <div key={i} className="command">
-              <span>$ </span>{cmd}
+            <div key={i} className='command'>
+              <span>$ </span>
+              {cmd}
             </div>
           ))}
         </div>
 
-        <div className="status">
+        <div className='status'>
           <span>Status: OPERATIONAL</span>
           <span>Database: CONNECTED</span>
           <span>Last Backup: 2024-01-18 14:30 UTC</span>
