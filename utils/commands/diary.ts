@@ -130,10 +130,11 @@ export async function diaryCommand(
       }
 
       case 'daylog': {
+        const stars = parsedCommand.flags.stars as number;
         const text = parsedCommand.flags.text as string;
         const date = (parsedCommand.flags.date as Date) || new Date();
 
-        return processDayLog(text, date);
+        return processDayLog(stars, text, date);
       }
 
       default:

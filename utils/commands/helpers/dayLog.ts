@@ -3,6 +3,7 @@ import prisma from '@prisma/prisma';
 import { ShortcutsResponse } from '@utils/types';
 
 export async function processDayLog(
+  stars: number,
   text: string,
   date?: Date
 ): Promise<ShortcutsResponse> {
@@ -11,6 +12,7 @@ export async function processDayLog(
     normalizedDate.setUTCHours(0, 0, 0, 0);
 
     const newComment: Prisma.JsonObject = {
+      stars,
       text,
       timestamp: new Date().toISOString()
     };

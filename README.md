@@ -58,10 +58,10 @@ The `export` flag is optional - when set to true, a JSON file with the raw data 
 ### Day Log
 
 ```
-daylog -text "text" -date "date"
+daylog -stars number -text "text" -date "date"
 ```
 
-Example: `daylog -text "Meeting notes or daily summary" -date "2024-01-18"`
+Example: `daylog -stars 3 -text "Meeting notes or daily summary" -date "2024-01-18"`
 
 Adds a log entry for a specific day. The date parameter is optional and defaults to the current date.
 

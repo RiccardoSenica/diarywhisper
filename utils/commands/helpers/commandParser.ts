@@ -141,6 +141,7 @@ export const diaryCommands: CommandDefinition[] = [
   {
     name: 'daylog',
     flags: [
+      { name: 'stars', type: 'number', required: true },
       { name: 'text', type: 'string', required: true },
       { name: 'date', type: 'date', required: false }
     ]

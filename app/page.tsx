@@ -6,7 +6,7 @@ export default function Home() {
   const commands = [
     'expense add -desc "Coffee" -cost 3.50 -cat "Food"',
     'expense report -from "2024-01-01" -to "2024-01-31"',
-    'expense daylog -text "Added team lunch" -date "2024-01-18"'
+    'expense daylog -stars 3 -text "Added team lunch" -date "2024-01-18"'
   ];
 
   return (

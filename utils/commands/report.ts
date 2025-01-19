@@ -200,6 +200,7 @@ export class ExpenseReporter {
             <tr>
               <th>ID</th>
               <th>Date</th>
+              <th>Stars</th>
               <th>Log</th>
             </tr>
             ${dayLogs.dayLogs
@@ -213,6 +214,7 @@ export class ExpenseReporter {
                   <tr>
                     <td>${dl.id}</td>
                     <td>${formatDate(dl.createdAt)}</td>
+                    <td>${'✪'.repeat(comment.stars)}</td>
                     <td>${comment.text}</td>
                   </tr>
                 `
