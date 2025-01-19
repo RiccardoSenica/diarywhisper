@@ -119,7 +119,6 @@ export class ExpenseReporter {
                   <th>Category</th>
                   <th>Total</th>
                   <th>Count</th>
-                  <th>Average</th>
                 </tr>
                 ${data.summary.byCategory
                   .map(
@@ -128,7 +127,6 @@ export class ExpenseReporter {
                     <td>${cat.category}</td>
                     <td>${formatCurrency(cat.total)}</td>
                     <td>${cat.count}</td>
-                    <td>${formatCurrency(cat.total / cat.count)}</td>
                   </tr>
                 `
                   )
@@ -140,6 +138,7 @@ export class ExpenseReporter {
           <h2>Detailed Expenses</h2>
           <table>
             <tr>
+              <th>ID</th>
               <th>Date</th>
               <th>Description</th>
               <th>Category</th>
@@ -149,6 +148,7 @@ export class ExpenseReporter {
               .map(
                 exp => `
               <tr>
+                <td>${exp.id}</td>
                 <td>${formatDate(exp.createdAt)}</td>
                 <td>${exp.description}</td>
                 <td>${exp.category.name}</td>
