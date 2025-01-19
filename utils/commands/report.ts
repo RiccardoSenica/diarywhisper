@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
+import { Prisma } from '@prisma/client';
 import prisma from '@prisma/prisma';
-import { ReportData } from '@utils/types';
+import { ReportExpenseData, ReportDayLogsData } from '@utils/types';
 
 export class ExpenseReporter {
   private resend: Resend;
@@ -22,7 +23,10 @@ export class ExpenseReporter {
     this.recipientEmail = process.env.RECIPIENT_EMAIL;
   }
 
-  private async generateReport(from: Date, to: Date): Promise<ReportData> {
+  private async generateExpenses(
+    from: Date,
+    to: Date
+  ): Promise<ReportExpenseData> {
     const startDate = new Date(from);
     startDate.setHours(0, 0, 0, 0);
 
@@ -77,7 +81,38 @@ export class ExpenseReporter {
     };
   }
 
-  private generateHtmlReport(data: ReportData): string {
+  private async generateDayLogs(
+    from: Date,
+    to: Date
+  ): Promise<ReportDayLogsData> {
+    const startDate = new Date(from);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(to);
+    endDate.setHours(23, 59, 59, 999);
+
+    const dayLogs = await prisma.dayLog.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return {
+      dayLogs,
+      dateRange: { from, to }
+    };
+  }
+
+  private generateHtmlReport(
+    expenses: ReportExpenseData,
+    dayLogs: ReportDayLogsData
+  ): string {
     const formatDate = (date: Date) =>
       date.toLocaleDateString('en-US', {
         year: 'numeric',
@@ -105,12 +140,12 @@ export class ExpenseReporter {
           </style>
         </head>
         <body>
-          <h1>Expense Report</h1>
-          <p>From ${formatDate(data.dateRange.from)} to ${formatDate(data.dateRange.to)}</p>
+          <h1>Diary Report</h1>
+          <p>From ${formatDate(expenses.dateRange.from)} to ${formatDate(expenses.dateRange.to)}</p>
           
           <div class="summary">
             <h2>Summary</h2>
-            <p><strong>Total Expenses:</strong> ${formatCurrency(data.summary.totalExpenses)}</p>
+            <p><strong>Total Expenses:</strong> ${formatCurrency(expenses.summary.totalExpenses)}</p>
             
             <div class="category-summary">
               <h3>Expenses by Category</h3>
@@ -120,7 +155,7 @@ export class ExpenseReporter {
                   <th>Total</th>
                   <th>Count</th>
                 </tr>
-                ${data.summary.byCategory
+                ${expenses.summary.byCategory
                   .map(
                     cat => `
                   <tr>
@@ -144,7 +179,7 @@ export class ExpenseReporter {
               <th>Category</th>
               <th>Amount</th>
             </tr>
-            ${data.expenses
+            ${expenses.expenses
               .map(
                 exp => `
               <tr>
@@ -158,6 +193,33 @@ export class ExpenseReporter {
               )
               .join('')}
           </table>
+
+          <h2>Day Logs Report</h2>
+          <p>From ${formatDate(dayLogs.dateRange.from)} to ${formatDate(dayLogs.dateRange.to)}</p>
+          <table>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Log</th>
+            </tr>
+            ${dayLogs.dayLogs
+              .filter(
+                (dl): dl is typeof dl & { comments: any[] } =>
+                  dl.comments !== null && Array.isArray(dl.comments)
+              )
+              .flatMap(dl =>
+                dl.comments.map(
+                  comment => `
+                  <tr>
+                    <td>${dl.id}</td>
+                    <td>${formatDate(dl.createdAt)}</td>
+                    <td>${comment.text}</td>
+                  </tr>
+                `
+                )
+              )
+              .join('')}
+          </table>
         </body>
       </html>
     `;
@@ -168,16 +230,27 @@ export class ExpenseReporter {
     to: Date,
     includeJson: boolean = false
   ): Promise<void> {
-    const reportData = await this.generateReport(from, to);
-    const htmlContent = this.generateHtmlReport(reportData);
+    const reportExpenseData = await this.generateExpenses(from, to);
+    const reportDayLogData = await this.generateDayLogs(from, to);
+    const htmlContent = this.generateHtmlReport(
+      reportExpenseData,
+      reportDayLogData
+    );
 
     const attachments = [];
     if (includeJson) {
-      const jsonData = JSON.stringify(reportData, null, 2);
+      const jsonExpenseData = JSON.stringify(reportExpenseData, null, 2);
       attachments.push({
-        filename: 'expense-report.json',
-        content: Buffer.from(jsonData).toString('base64'),
-        contentType: 'application/json' // Added MIME type
+        filename: 'expenses.json',
+        content: Buffer.from(jsonExpenseData).toString('base64'),
+        contentType: 'application/json'
+      });
+
+      const jsonDayLogData = JSON.stringify(reportDayLogData, null, 2);
+      attachments.push({
+        filename: 'day-logs.json',
+        content: Buffer.from(jsonDayLogData).toString('base64'),
+        contentType: 'application/json'
       });
     }
 
@@ -185,7 +258,7 @@ export class ExpenseReporter {
       const response = await this.resend.emails.send({
         from: this.senderEmail,
         to: this.recipientEmail,
-        subject: `Expense Report: ${from.toLocaleDateString()} - ${to.toLocaleDateString()}`,
+        subject: `Diary Report: ${from.toLocaleDateString()} - ${to.toLocaleDateString()}`,
         html: htmlContent,
         attachments
       });

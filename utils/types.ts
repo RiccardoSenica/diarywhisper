@@ -1,4 +1,4 @@
-import { Category, Expense } from '@prisma/client';
+import { Category, DayLog, Expense } from '@prisma/client';
 import { z } from 'zod';
 
 interface Flag {
@@ -40,7 +40,7 @@ const ExpenseSchema = z.object({
 
 export type ExpenseType = z.infer<typeof ExpenseSchema>;
 
-export interface ReportData {
+export interface ReportExpenseData {
   expenses: (Expense & { category: Category })[];
   summary: {
     totalExpenses: number;
@@ -50,6 +50,14 @@ export interface ReportData {
       count: number;
     }[];
   };
+  dateRange: {
+    from: Date;
+    to: Date;
+  };
+}
+
+export interface ReportDayLogsData {
+  dayLogs: DayLog[];
   dateRange: {
     from: Date;
     to: Date;
