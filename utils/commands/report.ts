@@ -137,6 +137,27 @@ export class ExpenseReporter {
             th { background-color: #f5f5f5; }
             .summary { margin: 20px 0; padding: 20px; background: #f9f9f9; border-radius: 5px; }
             .category-summary { margin-top: 10px; }
+            .rating {
+              --star-size: 20px;
+              --star-background: #ffd700;
+              --star-color: #ddd;
+              --percent: calc(var(--rating) * 20%);
+              display: inline-block;
+              font-size: var(--star-size);
+              font-family: Times; /* Ensures better star symbol rendering */
+              line-height: 1;
+              background: linear-gradient(90deg, 
+                var(--star-background) var(--percent), 
+                var(--star-color) var(--percent)
+              );
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+            }
+            .rating::before {
+              content: '★★★★★';
+              letter-spacing: 3px;
+            }
           </style>
         </head>
         <body>
@@ -208,17 +229,15 @@ export class ExpenseReporter {
                 (dl): dl is typeof dl & { comments: any[] } =>
                   dl.comments !== null && Array.isArray(dl.comments)
               )
-              .flatMap(dl =>
-                dl.comments.map(
-                  comment => `
-                  <tr>
-                    <td>${dl.id}</td>
-                    <td>${formatDate(dl.createdAt)}</td>
-                    <td>${'✪'.repeat(comment.stars)}</td>
-                    <td>${comment.text}</td>
-                  </tr>
-                `
-                )
+              .map(
+                dl => `
+                <tr>
+                  <td>${dl.id}</td>
+                  <td>${formatDate(dl.createdAt)}</td>
+                  <td><div class="rating" style="--rating: ${Math.round(dl.comments.reduce((a, c) => a + c.stars, 0) / dl.comments.length)};"></div></td>
+                  <td>${dl.comments.map(c => `- ${c.text}`).join('<br>')}</td>
+                </tr>
+              `
               )
               .join('')}
           </table>
