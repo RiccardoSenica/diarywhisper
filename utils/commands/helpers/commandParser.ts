@@ -134,7 +134,7 @@ export const diaryCommands: CommandDefinition[] = [
     name: 'report',
     flags: [
       { name: 'from', type: 'date', required: true },
-      { name: 'to', type: 'date', required: true },
+      { name: 'to', type: 'date', required: false },
       { name: 'export', type: 'boolean', required: false }
     ]
   },

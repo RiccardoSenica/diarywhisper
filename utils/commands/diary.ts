@@ -25,7 +25,7 @@ export async function diaryCommand(
     if (!parameters || !parameters['instruction']) {
       return {
         success: false,
-        message: 'Message parameter is missing.'
+        message: 'Instruction parameter is missing.'
       };
     }
 
@@ -36,17 +36,15 @@ export async function diaryCommand(
 
     switch (parsedCommand.command) {
       case 'add': {
-        if (!parsedCommand.flags.cat) {
-          return {
-            success: false,
-            message: 'Category is required'
-          };
+        const categoryName = (parsedCommand.flags.cat as string) || process.env.DEFAULT_CATEGORY
+        if(!categoryName){
+          throw new Error('DEFAULT_CATEGORY environment variable is not set')
         }
 
         const expense = await createExpense({
           description: parsedCommand.flags.desc as string,
           cost: parsedCommand.flags.cost as number,
-          categoryName: parsedCommand.flags.cat as string
+          categoryName
         });
 
         const formatted = formatResponse(expense);
@@ -102,7 +100,7 @@ export async function diaryCommand(
         try {
           const reporter = new ExpenseReporter();
           const from = parsedCommand.flags.from as Date;
-          const to = parsedCommand.flags.to as Date;
+          const to = (parsedCommand.flags.to as Date) || new Date();
           const includeJson = (parsedCommand.flags.export as boolean) || false;
 
           await reporter.sendReport(from, to, includeJson);
