@@ -17,10 +17,10 @@ A personal expenses and day log tracking API that works with Siri Shortcuts. Usi
 #### Add an Expense
 
 ```
-add -desc "description" -cost amount -cat category
+add -desc "description" -cost amount -cat category -date "date"
 ```
 
-Example: `add -desc "Weekly groceries" -cost 87.50 -cat groceries`
+Example: `add -desc "Weekly groceries" -cost 87.50 -cat groceries -date "2025-01-15"`
 
 #### Update an Expense
 

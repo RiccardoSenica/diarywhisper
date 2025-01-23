@@ -52,7 +52,7 @@ export async function diaryCommand(
         const formatted = formatResponse(expense);
         return {
           success: true,
-          message: `Added expense: ${formatted.description} (${formatted.cost.toFixed(2)}€) in category ${formatted.category}`,
+          message: `Added expense: ${formatted.description} (${formatted.cost.toFixed(2)}€) in category ${formatted.category} for ${formatted.createdAt.toLocaleDateString()}`,
           data: formatted
         };
       }
