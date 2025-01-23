@@ -35,7 +35,8 @@ export interface ShortcutsResponse {
 const ExpenseSchema = z.object({
   description: z.string().min(1),
   cost: z.number().positive(),
-  categoryName: z.string()
+  categoryName: z.string(),
+  date: z.date()
 });
 
 export type ExpenseType = z.infer<typeof ExpenseSchema>;

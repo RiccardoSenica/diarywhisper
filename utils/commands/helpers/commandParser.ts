@@ -113,7 +113,8 @@ export const diaryCommands: CommandDefinition[] = [
     flags: [
       { name: 'desc', type: 'string', required: true },
       { name: 'cost', type: 'number', required: true },
-      { name: 'cat', type: 'string', required: false }
+      { name: 'cat', type: 'string', required: false },
+      { name: 'date', type: 'date', required: false }
     ]
   },
   {

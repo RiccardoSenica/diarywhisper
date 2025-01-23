@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    if(!process.env.API_KEY){
-      throw new Error('API KEY  environment variable is not set')
+    if (!process.env.API_KEY) {
+      throw new Error('API KEY  environment variable is not set');
     }
 
     const body = await req.json();

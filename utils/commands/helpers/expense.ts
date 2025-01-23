@@ -17,6 +17,7 @@ export const createExpense = async (data: ExpenseType) => {
     data: {
       description: data.description,
       cost: data.cost,
+      createdAt: data.date,
       categoryId: category.id,
       deleted: false
     },

@@ -36,14 +36,16 @@ export async function diaryCommand(
 
     switch (parsedCommand.command) {
       case 'add': {
-        const categoryName = (parsedCommand.flags.cat as string) || process.env.DEFAULT_CATEGORY
-        if(!categoryName){
-          throw new Error('DEFAULT_CATEGORY environment variable is not set')
+        const categoryName =
+          (parsedCommand.flags.cat as string) || process.env.DEFAULT_CATEGORY;
+        if (!categoryName) {
+          throw new Error('DEFAULT_CATEGORY environment variable is not set');
         }
 
         const expense = await createExpense({
           description: parsedCommand.flags.desc as string,
           cost: parsedCommand.flags.cost as number,
+          date: (parsedCommand.flags.date as Date) || new Date(),
           categoryName
         });
 
