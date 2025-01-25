@@ -41,7 +41,7 @@ export async function processDayLog(
 
       return {
         success: true,
-        message: `Added comment to existing log for ${normalizedDate.toLocaleDateString()}`,
+        message: `Added comment to existing log for ${normalizedDate.toLocaleDateString('en-GB')}`,
         data: updatedLog
       };
     } else {
@@ -54,7 +54,7 @@ export async function processDayLog(
 
       return {
         success: true,
-        message: `Created new log for ${normalizedDate.toLocaleDateString()}`,
+        message: `Created new log for ${normalizedDate.toLocaleDateString('en-GB')}`,
         data: newLog
       };
     }

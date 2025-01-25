@@ -52,7 +52,7 @@ export async function diaryCommand(
         const formatted = formatResponse(expense);
         return {
           success: true,
-          message: `Added expense: ${formatted.description} (${formatted.cost.toFixed(2)}€) in category ${formatted.category} for ${formatted.createdAt.toLocaleDateString()}`,
+          message: `Added expense: ${formatted.description} (${formatted.cost.toFixed(2)}€) in category ${formatted.category} for ${formatted.createdAt.toLocaleDateString('en-GB')}`,
           data: formatted
         };
       }
@@ -108,7 +108,7 @@ export async function diaryCommand(
           await reporter.sendReport(from, to, includeJson);
 
           const formatDate = (date: Date) =>
-            date.toLocaleDateString('en-US', {
+            date.toLocaleDateString('en-GB', {
               year: 'numeric',
               month: 'long',
               day: 'numeric'

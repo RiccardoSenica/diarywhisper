@@ -114,14 +114,14 @@ export class ExpenseReporter {
     dayLogs: ReportDayLogsData
   ): string {
     const formatDate = (date: Date) =>
-      date.toLocaleDateString('en-US', {
+      date.toLocaleDateString('en-GB', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
       });
 
     const formatCurrency = (amount: number) =>
-      amount.toLocaleString('en-US', {
+      amount.toLocaleString('en-GB', {
         style: 'currency',
         currency: 'EUR'
       });
@@ -279,7 +279,7 @@ export class ExpenseReporter {
       const response = await this.resend.emails.send({
         from: this.senderEmail,
         to: this.recipientEmail,
-        subject: `Diary Report: ${from.toLocaleDateString()} - ${to.toLocaleDateString()}`,
+        subject: `Diary Report: ${from.toLocaleDateString('en-GB')} - ${to.toLocaleDateString('en-GB')}`,
         html: htmlContent,
         attachments
       });
